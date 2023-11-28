@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -141,17 +142,19 @@ public class TranslationHelper {
             List<Property> properties = new ArrayList<>();
             for (int i = 1; i < rowCount; i++) {
                 Cell[] row = sheet.getRow(i);
-                if (row.length < 5) {
-                    System.out.println("Missed row " + i + " property " + row[2]);
-                    continue;
-                }
                 String propertyId = row[1].getContents();
                 if (propertyId.split(SPLIT_CHAR).length < 2) {
                     System.out.println("Missed row " + i + " property length " + row[2]);
                 }
                 String fileName = propertyId.split(SPLIT_CHAR)[0];
                 String propertyName = propertyId.split(SPLIT_CHAR)[1];
-                String translation = row[4].getContents();
+                String translation;
+                if (row.length < 5) {
+                    System.out.println("Missed row " + i + " property " + row[2]);
+                    translation = "";
+                } else {
+                    translation = row[4].getContents();
+                }
                 properties.add(new Property(fileName, propertyName, null, translation));
             }
             return properties;
