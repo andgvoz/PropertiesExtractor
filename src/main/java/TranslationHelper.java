@@ -2,6 +2,7 @@ import jxl.Cell;
 import jxl.CellView;
 import jxl.Sheet;
 import jxl.Workbook;
+import jxl.WorkbookSettings;
 import jxl.format.Colour;
 import jxl.write.Label;
 import jxl.write.WritableCellFormat;
@@ -27,10 +28,10 @@ import java.util.stream.Collectors;
 public class TranslationHelper {
     private static final String PROPERTY_FILES_PATH = "/Users/agvozdikov/Align/projects/apps-lab-portal/pluto-labportal/pluto-labportal-web/src/main/resources";
     private static final String FILE_NAME = "LabPortalTranslationTemplate_v2.xls";
-    private static final String EXCEL_FILE_PATH = "/Users/agvozdikov/Align/projects/PropertiesExtractor/src/main/resources/LabPortalTranslationTemplate_v2_JP.xls";
+    private static final String EXCEL_FILE_PATH = "/Users/agvozdikov/Align/projects/PropertiesExtractor/TPS Translations template_vietnamese_TL-1080.xls";
     private static final String SPLIT_CHAR = "/";
     private static final String FILE_EXTENSION = "properties";
-    private static final String LANGUAGE = "ko_KR";
+    private static final String LANGUAGE = "vi_VN";
     private static final String OUTPUT_FOLDER = "target";
 
     private TranslationHelper() {
@@ -40,7 +41,7 @@ public class TranslationHelper {
      * Create property files from xml file with translations recieved from translation team
      */
     public static void extractTranslations() {
-        List<Property> properties = extractDataFromExcelInOrderOfOtherFile();
+        List<Property> properties = extractDataFromExcel();
         Map<String, List<Property>> propertyMap = properties.stream().collect(Collectors.groupingBy(Property::getFileName));
         for (Map.Entry<String, List<Property>> entry : propertyMap.entrySet()) {
             writePropertiesToFile(entry.getKey(), entry.getValue());
@@ -132,16 +133,25 @@ public class TranslationHelper {
     private static List<Property> extractDataFromExcel() {
         Workbook workbook = null;
         try {
-            workbook = Workbook.getWorkbook(new File(EXCEL_FILE_PATH));
+            WorkbookSettings ws = new WorkbookSettings();
+            ws.setEncoding("Cp1252");
+            workbook = Workbook.getWorkbook(new File(EXCEL_FILE_PATH), ws);
             Sheet sheet = workbook.getSheets()[0];
             int rowCount = sheet.getRows();
             List<Property> properties = new ArrayList<>();
             for (int i = 1; i < rowCount; i++) {
                 Cell[] row = sheet.getRow(i);
-                String propertyId = row[0].getContents();
+                if (row.length < 5) {
+                    System.out.println("Missed row " + i + " property " + row[2]);
+                    continue;
+                }
+                String propertyId = row[1].getContents();
+                if (propertyId.split(SPLIT_CHAR).length < 2) {
+                    System.out.println("Missed row " + i + " property length " + row[2]);
+                }
                 String fileName = propertyId.split(SPLIT_CHAR)[0];
                 String propertyName = propertyId.split(SPLIT_CHAR)[1];
-                String translation = row[2].getContents();
+                String translation = row[4].getContents();
                 properties.add(new Property(fileName, propertyName, null, translation));
             }
             return properties;

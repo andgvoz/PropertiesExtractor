@@ -4,7 +4,7 @@ public class Main {
 
     public static void main(String[] args) {
         //DBHelper.convertXmlToSql(XML_INPUT_PATH, SQL_OUTPUT_PATH);
-        TranslationHelper.extractProperties();
+        TranslationHelper.extractTranslations();
     }
 
 
