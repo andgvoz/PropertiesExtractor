@@ -4,6 +4,7 @@ public class Property {
     private String text;
     private String translation;
     private String limitations;
+    private String locale;
 
     public Property(String fileName, String propertyName, String text) {
         this.fileName = fileName;
@@ -16,6 +17,14 @@ public class Property {
         this.propertyName = propertyName;
         this.text = text;
         this.translation = translation;
+    }
+
+    public Property(String fileName, String propertyName, String text, String translation, String locale) {
+        this.fileName = fileName;
+        this.propertyName = propertyName;
+        this.text = text;
+        this.translation = translation;
+        this.locale = locale;
     }
 
     public String getFileName() {
@@ -56,5 +65,13 @@ public class Property {
 
     public void setLimitations(String limitations) {
         this.limitations = limitations;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 }

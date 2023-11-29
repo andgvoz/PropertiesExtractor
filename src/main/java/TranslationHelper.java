@@ -131,7 +131,7 @@ public class TranslationHelper {
         }
     }
 
-    private static List<Property> extractDataFromExcel() {
+    public static List<Property> extractDataFromExcel() {
         Workbook workbook = null;
         try {
             WorkbookSettings ws = new WorkbookSettings();
@@ -148,6 +148,7 @@ public class TranslationHelper {
                 }
                 String fileName = propertyId.split(SPLIT_CHAR)[0];
                 String propertyName = propertyId.split(SPLIT_CHAR)[1];
+                String text = row[2].getContents();
                 String translation;
                 if (row.length < 5) {
                     System.out.println("Missed row " + i + " property " + row[2]);
@@ -155,7 +156,7 @@ public class TranslationHelper {
                 } else {
                     translation = row[4].getContents();
                 }
-                properties.add(new Property(fileName, propertyName, null, translation));
+                properties.add(new Property(fileName, propertyName, text, translation, LANGUAGE));
             }
             return properties;
         } catch (Exception e) {

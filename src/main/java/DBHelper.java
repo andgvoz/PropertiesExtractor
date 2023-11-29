@@ -41,6 +41,19 @@ public class DBHelper {
         }
     }
 
+    public static void writePropertiesToSql(List<Property> properties, String sqlOutputPath) {
+        try (FileWriter fileWriter = new FileWriter(sqlOutputPath);
+             PrintWriter printWriter = new PrintWriter(fileWriter)) {
+            for (Property property : properties) {
+                printWriter.printf("select upsert_i18n_messages('%s', '%s', '%s', '%s');\n",
+                        property.getPropertyName(), property.getLocale(), property.getText(), property.getTranslation());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
     private static void writeMessagesToSql(List<Message> messages, String sqlOutputPath) {
         try (FileWriter fileWriter = new FileWriter(sqlOutputPath);
              PrintWriter printWriter = new PrintWriter(fileWriter)) {
