@@ -9,7 +9,6 @@ build
 webapp/META-INF/MANIFEST.MF
 /pluto/
 atlassian*.xml
-target/
 MANIFEST.MF
 .springBeans
 .beabuild.txt
@@ -27,4 +26,4 @@ postgres/*
 *.xml.versionsBackup
 *.patch
 .factorypath
-
+/target/
